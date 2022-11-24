@@ -10,6 +10,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgra
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@tableland/evm/contracts/ITablelandTables.sol";
+import "./IDropERC1155.sol";
 
 contract CanvasGame is
     ERC721URIStorageUpgradeable,
@@ -23,6 +24,9 @@ contract CanvasGame is
     Counters.Counter private _tokenIds;
     ITablelandTables private _tableland;
 
+    // egg collection
+    IDropERC1155 public _accessKeysCollection;
+
     string private _baseURIString =
         "https://testnet.tableland.network/query?s=";
     string private _metadataTable;
@@ -34,7 +38,10 @@ contract CanvasGame is
 
     // Our will be pulled from the network
 
-    function initialize(string memory externalURL) public initializer {
+    function initialize(string memory externalURL, address accessKeysCollection)
+        public
+        initializer
+    {
         __ERC721URIStorage_init();
         __ERC721Holder_init();
         __Ownable_init();
@@ -43,12 +50,13 @@ contract CanvasGame is
 
         _tablePrefix = "canvas";
         _externalURL = externalURL;
+
+        _accessKeysCollection = IDropERC1155(accessKeysCollection);
     }
 
     // registry goerli optimism 0xC72E8a7Be04f2469f8C2dB3F1BdF69A7D516aBbA
     function createMetadataTable(address registry)
         external
-        payable
         onlyOwner
         returns (uint256)
     {
@@ -95,7 +103,28 @@ contract CanvasGame is
      * Any time a token is minted, a new row of metadata will be
      * dynamically insterted into the metadata table.
      */
-    function safeMint(address to) public returns (uint256) {
+    function safeMint(address to, uint256[] memory tokenIds)
+        public
+        returns (uint256)
+    {
+        require(
+            _accessKeysCollection.balanceOf(msg.sender, tokenIds[0]) > 0,
+            "Rejected: Claimer does not have access key"
+        );
+        // require because the operator can not set approval status for self
+        require(
+            _accessKeysCollection.isApprovedForAll(msg.sender, address(this)),
+            "Rejected: caller is not approved"
+        );
+
+        uint256[] memory burnAmount = new uint256[](1);
+        burnAmount[0] = 1;
+        _accessKeysCollection.burnBatch(
+            msg.sender, // Burn from the receiver
+            tokenIds, // Token ID
+            burnAmount // Amount to burn is the quantity they are claiming
+        );
+
         uint256 newItemId = _tokenIds.current();
         _tableland.runSQL(
             address(this),
