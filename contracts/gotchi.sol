@@ -73,9 +73,11 @@ contract Gotchi is
              *    int id,
              *    string name,
              *    string description,
+             *    string image,
              *    string external_link,
-             *    int x,
-             *    int y
+             *    int level,
+             *    int hp,
+             *    int offensive
              *  );
              */
             string.concat(
@@ -83,7 +85,7 @@ contract Gotchi is
                 _tablePrefix,
                 "_",
                 Strings.toString(block.chainid),
-                " (id int, external_link text, x int, y int);"
+                " (id int, name text, description text, image text, external_link text, level int, hp int, offensive int);"
             )
         );
 
@@ -132,11 +134,17 @@ contract Gotchi is
             string.concat(
                 "INSERT INTO ",
                 _metadataTable,
-                " (id, external_link, x, y) VALUES (",
+                " (id, name, description, image, external_link, level, hp, offensive) VALUES (",
                 Strings.toString(newItemId),
                 ", '",
+                "Gotchi",
+                "', '",
+                "Your Gotchi",
+                "', '",
+                "https://bafkreihgwdkt5yuro2hqiuszs2v7lt7zz2hupfwitpthhn5vp6gi4e37ni.ipfs.nftstorage.link/",
+                "', '",
                 _externalURL,
-                "', 0, 0)"
+                "', 0, 20, 5)"
             )
         );
         _safeMint(to, newItemId, "");
@@ -150,16 +158,10 @@ contract Gotchi is
      * make move, they can supply a new x,y coordinate and update
      * their token's metadata.
      */
-    function makeMove(
-        uint256 tokenId,
-        uint256 x,
-        uint256 y
-    ) public {
+    function levelUp(uint256 tokenId) public {
         // check token ownership
         require(this.ownerOf(tokenId) == msg.sender, "Invalid owner");
         // simple on-chain gameplay enforcement
-        require(x < 512 && 0 <= x, "Out of bounds");
-        require(y < 512 && 0 <= y, "Out of bounds");
         // Update the row in tableland
         _tableland.runSQL(
             address(this),
@@ -167,10 +169,9 @@ contract Gotchi is
             string.concat(
                 "UPDATE ",
                 _metadataTable,
-                " SET x = ",
-                Strings.toString(x),
-                ", y = ",
-                Strings.toString(y),
+                " SET image = '",
+                "https://bafkreigtdvbylrd5icv545523ca5dbaksryzdymfaovj3ia3w6z7pto7su.ipfs.nftstorage.link/",
+                "' ",
                 " WHERE id = ",
                 Strings.toString(tokenId),
                 ";"
@@ -208,7 +209,7 @@ contract Gotchi is
         return
             string.concat(
                 base,
-                "SELECT%20json_object(%27id%27,id,%27external_link%27,external_link,%27x%27,x,%27y%27,y)%20as%20meta%20FROM%20",
+                "SELECT%20json_object(%27id%27%2Cid%2C%27name%27%2Cname%2C%27description%27%2Cdescription%2C%27image%27%2Cimage%2C%27external_link%27%2Cexternal_link%2C%20%27level%27%2Clevel%2C%27hp%27%2Chp%2C%27offensive%27%2Coffensive)%20as%20meta%20FROM%20",
                 _metadataTable,
                 "%20WHERE%20id=",
                 Strings.toString(tokenId),
