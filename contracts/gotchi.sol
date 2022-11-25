@@ -30,8 +30,11 @@ contract Gotchi is
     string private _baseURIString =
         "https://testnet.tableland.network/query?s=";
     string private _metadataTable;
+    string private _attributesTable;
     uint256 private _metadataTableId;
+    uint256 private _attributesTableId;
     string private _tablePrefix;
+    string private _tableAttributesPrefix;
     // someday we update this with a nuxt app that diplays x,y and
     // gives you the interface to move x,y.
     string private _externalURL;
@@ -48,18 +51,15 @@ contract Gotchi is
         __Pausable_init();
         __ReentrancyGuard_init();
 
-        _tablePrefix = "canvas";
+        _tablePrefix = "gotchi_main";
+        _tableAttributesPrefix = "gotchi_attributes";
         _externalURL = externalURL;
 
         _accessKeysCollection = IDropERC1155(accessKeysCollection);
     }
 
     // registry goerli optimism 0xC72E8a7Be04f2469f8C2dB3F1BdF69A7D516aBbA
-    function createMetadataTable(address registry)
-        external
-        onlyOwner
-        returns (uint256)
-    {
+    function createMetadataTable(address registry) external onlyOwner {
         /*
          * registry if the address of the Tableland registry. You can always find those
          * here https://github.com/tablelandnetwork/evm-tableland#currently-supported-chains
@@ -85,7 +85,7 @@ contract Gotchi is
                 _tablePrefix,
                 "_",
                 Strings.toString(block.chainid),
-                " (id int, name text, description text, image text, external_link text, level int, hp int, offensive int);"
+                " (id int primary key, name text, description text, image text, external_link text, level int, hp int, offensive int);"
             )
         );
 
@@ -97,7 +97,24 @@ contract Gotchi is
             Strings.toString(_metadataTableId)
         );
 
-        return _metadataTableId;
+        _attributesTableId = _tableland.createTable(
+            address(this),
+            string.concat(
+                "CREATE TABLE ",
+                _tableAttributesPrefix,
+                "_",
+                Strings.toString(block.chainid),
+                " (main_id int not null, trait_type text not null, value text);"
+            )
+        );
+
+        _attributesTable = string.concat(
+            _tableAttributesPrefix,
+            "_",
+            Strings.toString(block.chainid),
+            "_",
+            Strings.toString(_attributesTableId)
+        );
     }
 
     /*
@@ -147,6 +164,19 @@ contract Gotchi is
                 "', 0, 20, 5)"
             )
         );
+        _tableland.runSQL(
+            address(this),
+            _attributesTableId,
+            string.concat(
+                "INSERT INTO ",
+                _attributesTable,
+                " (main_id, trait_type, value) VALUES (",
+                Strings.toString(newItemId),
+                ", '",
+                "Level",
+                "', 0)"
+            )
+        );
         _safeMint(to, newItemId, "");
         _tokenIds.increment();
         return newItemId;
@@ -173,6 +203,21 @@ contract Gotchi is
                 "https://bafkreigtdvbylrd5icv545523ca5dbaksryzdymfaovj3ia3w6z7pto7su.ipfs.nftstorage.link/",
                 "' ",
                 " WHERE id = ",
+                Strings.toString(tokenId),
+                ";"
+            )
+        );
+
+        _tableland.runSQL(
+            address(this),
+            _attributesTableId,
+            string.concat(
+                "UPDATE ",
+                _attributesTable,
+                " SET value = ",
+                "1",
+                " ",
+                " WHERE main_id = ",
                 Strings.toString(tokenId),
                 ";"
             )
@@ -206,14 +251,37 @@ contract Gotchi is
          * SELECT json_object('id',id,'external_link',external_link,'x',x,'y',y)
          *  as meta FROM canvas_5_4 WHERE id=11
          */
-        return
-            string.concat(
-                base,
-                "SELECT%20json_object(%27id%27%2Cid%2C%27name%27%2Cname%2C%27description%27%2Cdescription%2C%27image%27%2Cimage%2C%27external_link%27%2Cexternal_link%2C%20%27level%27%2Clevel%2C%27hp%27%2Chp%2C%27offensive%27%2Coffensive)%20as%20meta%20FROM%20",
+        // return
+        //     string.concat(
+        //         base,
+        //         "SELECT%20json_object(%27id%27%2Cid%2C%27name%27%2Cname%2C%27description%27%2Cdescription%2C%27image%27%2Cimage%2C%27external_link%27%2Cexternal_link%2C%20%27level%27%2Clevel%2C%27hp%27%2Chp%2C%27offensive%27%2Coffensive)%20as%20meta%20FROM%20",
+        //         _metadataTable,
+        //         "%20WHERE%20id=",
+        //         Strings.toString(tokenId),
+        //         "&mode=list"
+        //     );
+        string memory query = string(
+            abi.encodePacked(
+                "SELECT%20json_object%28%27id%27%2Cid%2C%27name%27%2Cname%2C%27image%27%2Cimage%2C%27description%27%2Cdescription%2C%27attributes%27%2Cjson_group_array%28json_object%28%27trait_type%27%2Ctrait_type%2C%27value%27%2Cvalue%29%29%29%20as%20meta%20FROM%20",
                 _metadataTable,
-                "%20WHERE%20id=",
-                Strings.toString(tokenId),
-                "&mode=list"
+                "%20JOIN%20",
+                _attributesTable,
+                "%20ON%20",
+                _metadataTable,
+                "%2Eid%20%3D%20",
+                _attributesTable,
+                "%2Emain_id%20WHERE%20id%3D"
+            )
+        );
+        return
+            string(
+                abi.encodePacked(
+                    base,
+                    query,
+                    Strings.toString(tokenId),
+                    "%20group%20by%20id",
+                    "&mode=list"
+                )
             );
     }
 
@@ -252,6 +320,14 @@ contract Gotchi is
     function char(bytes1 b) internal pure returns (bytes1 c) {
         if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
         else return bytes1(uint8(b) + 0x57);
+    }
+
+    function getMetadataTable() public view returns (string memory) {
+        return _metadataTable;
+    }
+
+    function getAttributesTable() public view returns (string memory) {
+        return _attributesTable;
     }
 
     /**
