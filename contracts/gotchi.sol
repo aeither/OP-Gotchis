@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@tableland/evm/contracts/ITablelandTables.sol";
 import "./IDropERC1155.sol";
 
-contract CanvasGame is
+contract Gotchi is
     ERC721URIStorageUpgradeable,
     ERC721HolderUpgradeable,
     OwnableUpgradeable,
