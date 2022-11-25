@@ -22,7 +22,9 @@ const main = async () => {
   const refiparty = fs.readFileSync(
     path.resolve(__dirname, "../assets/refiparty.jpg")
   );
-  const wetech = fs.readFileSync(path.resolve(__dirname, "../assets/wetech.jpg"));
+  const wetech = fs.readFileSync(
+    path.resolve(__dirname, "../assets/wetech.jpg")
+  );
   const terraimpact = fs.readFileSync(
     path.resolve(__dirname, "../assets/terra-impact.jpg")
   );
@@ -40,12 +42,14 @@ const main = async () => {
       description: "Refi party supports events for marginalized communities.",
       image: fs.readFileSync(path.resolve(__dirname, "../assets/egg.jpg")),
       animation_url: refipartyUri,
+      attributes: [{ trait_type: "Initiative", value: "Refi Party" }],
     },
     {
       name: "WeTech",
       description: "Our mission to help women of color break into technology.",
       image: fs.readFileSync(path.resolve(__dirname, "../assets/egg.jpg")),
-      external_url: wetechUri,
+      animation_url: wetechUri,
+      attributes: [{ trait_type: "Initiative", value: "WeTech" }],
     },
     {
       name: "Terra Impact",
@@ -53,6 +57,9 @@ const main = async () => {
         "Bringing integrity to Carbon and ESG markets and ending greenwashing.",
       image: fs.readFileSync(path.resolve(__dirname, "../assets/egg.jpg")),
       animation_url: terraimpactUri,
+      attributes: [{ trait_type: "Initiative", value: "Terra Impact" }],
+      //   external_url: "https://google.com",
+      //   background_color: "FFD700",
     },
   ];
 
