@@ -183,10 +183,9 @@ contract Gotchi is
     }
 
     /*
-     * makeMove is an example of how to encode gameplay into both the
+     * levelUp is an example of how to encode gameplay into both the
      * smart contract and the metadata. Whenever a token owner calls
-     * make move, they can supply a new x,y coordinate and update
-     * their token's metadata.
+     * level up, they can update their token's metadata.
      */
     function levelUp(uint256 tokenId) public {
         // check token ownership
@@ -260,28 +259,24 @@ contract Gotchi is
         //         Strings.toString(tokenId),
         //         "&mode=list"
         //     );
-        string memory query = string(
-            abi.encodePacked(
-                "SELECT%20json_object%28%27id%27%2Cid%2C%27name%27%2Cname%2C%27image%27%2Cimage%2C%27description%27%2Cdescription%2C%27attributes%27%2Cjson_group_array%28json_object%28%27trait_type%27%2Ctrait_type%2C%27value%27%2Cvalue%29%29%29%20as%20meta%20FROM%20",
-                _metadataTable,
-                "%20JOIN%20",
-                _attributesTable,
-                "%20ON%20",
-                _metadataTable,
-                "%2Eid%20%3D%20",
-                _attributesTable,
-                "%2Emain_id%20WHERE%20id%3D"
-            )
+        string memory query = string.concat(
+            "SELECT%20json_object%28%27id%27%2Cid%2C%27name%27%2Cname%2C%27image%27%2Cimage%2C%27description%27%2Cdescription%2C%27attributes%27%2Cjson_group_array%28json_object%28%27trait_type%27%2Ctrait_type%2C%27value%27%2Cvalue%29%29%29%20as%20meta%20FROM%20",
+            _metadataTable,
+            "%20JOIN%20",
+            _attributesTable,
+            "%20ON%20",
+            _metadataTable,
+            "%2Eid%20%3D%20",
+            _attributesTable,
+            "%2Emain_id%20WHERE%20id%3D"
         );
         return
-            string(
-                abi.encodePacked(
-                    base,
-                    query,
-                    Strings.toString(tokenId),
-                    "%20group%20by%20id",
-                    "&mode=list"
-                )
+            string.concat(
+                base,
+                query,
+                Strings.toString(tokenId),
+                "%20group%20by%20id",
+                "&mode=list"
             );
     }
 
