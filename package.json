@@ -1,0 +1,25 @@
+{
+  "name": "fund-and-play",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aeither/Fund-and-Play.git"
+  },
+  "keywords": [],
+  "author": "aeither",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aeither/Fund-and-Play/issues"
+  },
+  "homepage": "https://github.com/aeither/Fund-and-Play#readme",
+  "dependencies": {
+    "@thirdweb-dev/sdk": "^3.6.2",
+    "@thirdweb-dev/storage": "^1.0.6",
+    "dotenv": "^16.0.3"
+  }
+}
