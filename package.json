@@ -1,5 +1,5 @@
 {
-  "name": "fund-and-play",
+  "name": "OP-Gotchis",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aeither/Fund-and-Play.git"
+    "url": "git+https://github.com/aeither/OP-Gotchis.git"
   },
   "keywords": [],
   "author": "aeither",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/aeither/Fund-and-Play/issues"
+    "url": "https://github.com/aeither/OP-Gotchis/issues"
   },
-  "homepage": "https://github.com/aeither/Fund-and-Play#readme",
+  "homepage": "https://github.com/aeither/OP-Gotchis#readme",
   "dependencies": {
     "@thirdweb-dev/sdk": "^3.6.2",
     "@thirdweb-dev/storage": "^1.0.6",
