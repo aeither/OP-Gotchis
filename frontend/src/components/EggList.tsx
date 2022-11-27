@@ -11,6 +11,7 @@ import { GOTCHI_ABI } from "../utils/abis";
 import { GOTCHI_ADDRESS, INITIATIVE_ADDRESS } from "../utils/constants";
 import type { CardProps } from "./GotchiCard";
 import GotchiCard from "./GotchiCard";
+import SkeletonCards from "./SkeletonCards";
 
 const EggList: FC = () => {
   const address = useAddress();
@@ -68,7 +69,7 @@ const EggList: FC = () => {
             );
           })
         ) : (
-          <p>Loading...</p>
+          <SkeletonCards />
         )}
       </div>
     </div>

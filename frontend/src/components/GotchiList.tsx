@@ -1,7 +1,8 @@
 "use client";
 
 import { useAddress, useContract, useContractWrite } from "@thirdweb-dev/react";
-import { FC, useEffect, useState } from "react";
+import type { FC } from "react";
+import { useEffect, useState } from "react";
 import { GOTCHI_ABI } from "../utils/abis";
 import { GOTCHI_ADDRESS } from "../utils/constants";
 import type { CardProps } from "./GotchiCard";

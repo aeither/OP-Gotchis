@@ -2,7 +2,6 @@
 
 import type { FC } from "react";
 import { useState } from "react";
-import Card from "../components/Card";
 
 const BattlefieldHead: FC = () => {
   const [selected, setSelected] = useState(false);
@@ -19,9 +18,7 @@ const BattlefieldHead: FC = () => {
         <p className="text-neutral-light">
           2. Choose a type to attack the enemy.
         </p>
-        <p className="text-neutral-light">
-          3. The enemy will block 3 types.
-        </p>
+        <p className="text-neutral-light">3. The enemy will block 3 types.</p>
         <p className="text-neutral-light">
           You win if the chosen color is not blocked.
         </p>
