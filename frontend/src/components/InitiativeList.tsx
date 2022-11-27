@@ -5,6 +5,7 @@ import type { FC } from "react";
 import { INITIATIVE_ADDRESS } from "../utils/constants";
 import type { CardProps } from "./GotchiCard";
 import GotchiCard from "./GotchiCard";
+import SkeletonCards from "./SkeletonCards";
 
 const InitiativeList: FC = () => {
   const { contract } = useContract(INITIATIVE_ADDRESS, "edition-drop");
@@ -44,7 +45,7 @@ const InitiativeList: FC = () => {
             );
           })
         ) : (
-          <p>Loading...</p>
+          <SkeletonCards />
         )}
       </div>
     </div>
