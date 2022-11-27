@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@radix-ui/react-radio-group": "^1.1.0",
+    "@thirdweb-dev/react": "^3.6.2",
+    "@thirdweb-dev/sdk": "^3.6.2",
     "clsx": "^1.2.1",
     "daisyui": "^2.42.1",
+    "ethers": "^5.7.2",
     "next": "13.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",

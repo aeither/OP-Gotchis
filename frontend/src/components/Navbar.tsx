@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import type { FC } from "react";
 import { clsx } from "clsx";
+import { ConnectWallet } from "@thirdweb-dev/react";
 
 const Navbar: FC = () => {
   const router = useRouter();
@@ -44,7 +45,7 @@ const Navbar: FC = () => {
           </ul>
         </div>
         <a className=" ml-2 p-2 text-xl font-bold normal-case italic text-primary ">
-          OP <span className="text-white font-normal">Gotchis</span>
+          OP <span className="font-normal text-white">Gotchis</span>
         </a>
       </div>
       <div className="navbar-center hidden lg:flex">
@@ -85,7 +86,7 @@ const Navbar: FC = () => {
         </ul>
       </div>
       <div className="navbar-end">
-        <a className="btn">Connect Wallet</a>
+        <ConnectWallet colorMode="dark" accentColor="#F50029" />
       </div>
     </div>
   );
