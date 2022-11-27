@@ -9,6 +9,10 @@ import type { CardProps } from "./GotchiCard";
 import GotchiCard from "./GotchiCard";
 import SkeletonCards from "./SkeletonCards";
 
+interface Attribute {
+  value: string;
+  trait_type: string;
+}
 interface NFTData {
   balance: string;
   title: string;
@@ -17,6 +21,7 @@ interface NFTData {
     name: string;
     image: string;
     description: string;
+    attributes: Attribute[];
     id: number;
   };
   timeLastUpdated: string;
@@ -53,12 +58,15 @@ const GotchiList: FC = () => {
       <div className="grid grid-cols-3 gap-8">
         {gotchisData ? (
           gotchisData.map((nft) => {
+            const level = nft.metadata.attributes[0]?.value;
+            const canEvolve = Number(level) === 0;
+
             const data: CardProps = {
               title: String(nft.metadata.name) || "",
               description: nft.metadata.description || "",
               image: nft.metadata.image || "",
-              btnText: "Evolve",
-              disabled: true,
+              btnText: canEvolve ? "Evolve" : "Max",
+              disabled: !canEvolve,
               btnAction: async () => {
                 await evolveGotchi([nft.metadata.id]);
               },
