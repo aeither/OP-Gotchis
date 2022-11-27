@@ -223,6 +223,31 @@ contract Gotchi is
         );
     }
 
+    function random5(uint256 nonce) private view returns (uint256) {
+        uint256 randomHash = uint256(
+            keccak256(
+                abi.encodePacked(
+                    block.difficulty,
+                    block.timestamp,
+                    msg.sender,
+                    nonce
+                )
+            )
+        );
+        return randomHash % 5;
+    }
+
+    function play(uint8 number) public view returns (uint8, bool) {
+        // require time limited not implemented for demo
+        uint8 random1 = uint8(random5(1));
+        bool winner = false;
+        if (number == random1) {
+            winner = true;
+        }
+
+        return (random1, winner);
+    }
+
     function _baseURI() internal view override returns (string memory) {
         return _baseURIString;
     }
