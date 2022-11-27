@@ -6,6 +6,7 @@ export interface CardProps {
   description: string;
   image: string;
   btnText: string;
+  disabled?: boolean;
   btnAction: (id: number) => void;
 }
 
@@ -14,6 +15,7 @@ const GotchiCard: FC<CardProps> = ({
   description,
   image,
   btnText,
+  disabled,
   btnAction,
 }) => {
   return (
@@ -26,6 +28,7 @@ const GotchiCard: FC<CardProps> = ({
         <p className="text-neutral-light">{description}</p>
         <div className="card-actions justify-end">
           <button
+            disabled={disabled}
             onClick={() => btnAction(2)}
             className="btn w-full bg-neutral-dark text-primary hover:border-neutral-light"
           >

@@ -1,21 +1,78 @@
 "use client";
 
-import { useContract, useNFTs } from "@thirdweb-dev/react";
-import type { FC } from "react";
-import { useState } from "react";
+import { useAddress, useContract, useContractWrite } from "@thirdweb-dev/react";
+import { FC, useEffect, useState } from "react";
+import { GOTCHI_ABI } from "../utils/abis";
+import { GOTCHI_ADDRESS } from "../utils/constants";
 import type { CardProps } from "./GotchiCard";
 import GotchiCard from "./GotchiCard";
+import SkeletonCards from "./SkeletonCards";
+
+interface NFTData {
+  balance: string;
+  title: string;
+  description: string;
+  metadata: {
+    name: string;
+    image: string;
+    description: string;
+    id: number;
+  };
+  timeLastUpdated: string;
+}
 
 const GotchiList: FC = () => {
-  const INITIATIVE_ADDRESS = "0x8F0f425515fA0Ff0702dc890f3f062cba348d624";
+  const address = useAddress();
+  const { contract: gotchiContract } = useContract(GOTCHI_ADDRESS, GOTCHI_ABI);
+  const { mutateAsync: evolveGotchi } = useContractWrite(
+    gotchiContract,
+    "levelUp"
+  );
+  const [gotchisData, setGotchisData] = useState<NFTData[]>();
 
-  const [selected, setSelected] = useState(false);
-  const { contract } = useContract(INITIATIVE_ADDRESS, "edition-drop");
-  const { data: nfts, isLoading } = useNFTs(contract, { start: 0, count: 100 });
+  const getGotchis = async () => {
+    if (!address) return;
+
+    const response = await fetch(`/api/server?address=${address}`)
+      .then((response) => response.json())
+      .catch((err) => console.error(err));
+
+    setGotchisData(response.data.ownedNfts);
+  };
+  useEffect(() => {
+    getGotchis();
+  }, [address]);
 
   return (
     <div>
-     
+      <div className="flex w-full flex-col pb-8">
+        <h2 className="text-xl font-bold text-white">Gotchis</h2>
+        <p className="text-neutral-light">Play with them and evolve!</p>
+      </div>
+      <div className="grid grid-cols-3 gap-8">
+        {gotchisData ? (
+          gotchisData.map((nft) => {
+            const data: CardProps = {
+              title: String(nft.metadata.name) || "",
+              description: nft.metadata.description || "",
+              image: nft.metadata.image || "",
+              btnText: "Evolve",
+              disabled: true,
+              btnAction: async () => {
+                await evolveGotchi([nft.metadata.id]);
+              },
+            };
+
+            return (
+              <>
+                <GotchiCard {...data} />
+              </>
+            );
+          })
+        ) : (
+          <SkeletonCards />
+        )}
+      </div>
     </div>
   );
 };
