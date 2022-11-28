@@ -17,7 +17,7 @@ const InitiativeList: FC = () => {
 
   return (
     <div>
-      <div className="flex w-full flex-col">
+      <div className="flex w-full flex-col pb-8">
         <h2 className="text-xl font-bold text-white">Trending projects</h2>
         <p className="text-neutral-light">Most traction in the last 24 hours</p>
       </div>

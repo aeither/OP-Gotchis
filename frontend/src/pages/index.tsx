@@ -1,4 +1,5 @@
 import { type NextPage } from "next";
+import { HomeImage } from "../components/HomeImage";
 import InitiativeList from "../components/InitiativeList";
 import Navbar from "../components/Navbar";
 
@@ -18,7 +19,7 @@ const Home: NextPage = () => {
               </p>
             </div>
             <div>
-              <img src="https://placeimg.com/400/225/arch" alt="car!" />
+              <HomeImage />
             </div>
           </div>
           <InitiativeList />
