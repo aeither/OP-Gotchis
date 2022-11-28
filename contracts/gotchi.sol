@@ -39,7 +39,8 @@ contract Gotchi is
     // gives you the interface to move x,y.
     string private _externalURL;
 
-    // Our will be pulled from the network
+    // events
+    event Play(address indexed _from, uint8 _type, bool _result);
 
     function initialize(string memory externalURL, address accessKeysCollection)
         public
@@ -237,7 +238,11 @@ contract Gotchi is
         return randomHash % 5;
     }
 
-    function play(uint8 number) public view returns (uint8, bool) {
+    function play(uint256 tokenId, uint8 number)
+        public
+        payable
+        returns (uint8, bool)
+    {
         // require time limited not implemented for demo
         uint8 random1 = uint8(random5(1));
         bool winner = false;
@@ -245,6 +250,7 @@ contract Gotchi is
             winner = true;
         }
 
+        emit Play(msg.sender, random1, winner);
         return (random1, winner);
     }
 
@@ -279,8 +285,8 @@ contract Gotchi is
         //     string.concat(
         //         base,
         //         "SELECT%20json_object(%27id%27%2Cid%2C%27name%27%2Cname%2C%27description%27%2Cdescription%2C%27image%27%2Cimage%2C%27external_link%27%2Cexternal_link%2C%20%27level%27%2Clevel%2C%27hp%27%2Chp%2C%27offensive%27%2Coffensive)%20as%20meta%20FROM%20",
-        //         _metadataTable,
-        //         "%20WHERE%20id=",
+        //         _attributesTable,
+        //         "%20WHERE%20main_id=",
         //         Strings.toString(tokenId),
         //         "&mode=list"
         //     );
