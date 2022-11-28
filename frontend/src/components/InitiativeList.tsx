@@ -33,6 +33,7 @@ const InitiativeList: FC = () => {
               btnAction: async () => {
                 if (contract) {
                   await contract.claim(nft.metadata.id, 1);
+                  await fetch(`/api/register?id=${nft.metadata.id}`)
                   refetch();
                 }
               },
