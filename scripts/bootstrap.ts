@@ -10,13 +10,21 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 const main = async () => {
   // Constants
-  const initiativeAddress = "0x8F0f425515fA0Ff0702dc890f3f062cba348d624";
+  // const initiativeAddress = "0x8F0f425515fA0Ff0702dc890f3f062cba348d624";
 
   // get contract
   const sdk = ThirdwebSDK.fromPrivateKey(PRIVATE_KEY, "optimism-goerli");
-  const contract = await sdk.getContract(initiativeAddress, "edition-drop");
+  // const contract = await sdk.getContract(initiativeAddress, "edition-drop");
   //   const address = contract.getAddress();
   //   console.log(address);
+
+  // create contract
+  const contractAddress = await sdk.deployer.deployEditionDrop({
+    name: "OP Gotchis",
+    primary_sale_recipient: "0x9Ed18213603B9082d786D75d9fBDE34B15960025",
+  });
+  const contract = await sdk.getContract(contractAddress, "edition-drop");
+  console.log(contractAddress);
 
   // upload images to ipfs
   const refiparty = fs.readFileSync(
