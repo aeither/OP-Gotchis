@@ -223,6 +223,30 @@ export const GOTCHI_ABI = [
     type: "event",
   },
   {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "number",
+        type: "uint8",
+      },
+    ],
+    name: "play",
+    outputs: [
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
+      },
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "renounceOwnership",
     outputs: [],
@@ -610,40 +634,6 @@ export const GOTCHI_ABI = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint8",
-        name: "number",
-        type: "uint8",
-      },
-    ],
-    name: "play",
-    outputs: [
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "pure",
     type: "function",
   },
   {
