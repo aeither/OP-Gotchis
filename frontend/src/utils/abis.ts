@@ -225,6 +225,11 @@ export const GOTCHI_ABI = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
         internalType: "uint8",
         name: "number",
         type: "uint8",
@@ -245,6 +250,31 @@ export const GOTCHI_ABI = [
     ],
     stateMutability: "payable",
     type: "function",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_from",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint8",
+        name: "_type",
+        type: "uint8",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "_result",
+        type: "bool",
+      },
+    ],
+    name: "Play",
+    type: "event",
   },
   {
     inputs: [],
