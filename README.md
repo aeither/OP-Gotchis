@@ -1,6 +1,8 @@
 # OP Gotchis
 Fund public goods and play evolving NFT game.
 
+![Hero](https://user-images.githubusercontent.com/36173828/205454155-dbdb50ce-d659-441d-854f-e656cfea8d7e.png)
+
 ## DEMO
 
 VIDEO LINK
