@@ -11,6 +11,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@tableland/evm/contracts/ITablelandTables.sol";
 import "./IDropERC1155.sol";
+import "./ITokenERC20.sol";
 
 contract Gotchi is
     ERC721URIStorageUpgradeable,
@@ -27,6 +28,8 @@ contract Gotchi is
     // egg collection
     IDropERC1155 public _accessKeysCollection;
 
+    ITokenERC20 public _candyToken;
+
     string private _baseURIString =
         "https://testnet.tableland.network/query?s=";
     string private _metadataTable;
@@ -42,10 +45,11 @@ contract Gotchi is
     // events
     event Play(address indexed _from, uint8 _type, bool _result);
 
-    function initialize(string memory externalURL, address accessKeysCollection)
-        public
-        initializer
-    {
+    function initialize(
+        string memory externalURL,
+        address accessKeysCollection,
+        address candyAddress
+    ) public initializer {
         __ERC721URIStorage_init();
         __ERC721Holder_init();
         __Ownable_init();
@@ -57,6 +61,7 @@ contract Gotchi is
         _externalURL = externalURL;
 
         _accessKeysCollection = IDropERC1155(accessKeysCollection);
+        _candyToken = ITokenERC20(candyAddress);
     }
 
     // registry goerli optimism 0xC72E8a7Be04f2469f8C2dB3F1BdF69A7D516aBbA
@@ -248,6 +253,7 @@ contract Gotchi is
         bool winner = false;
         if (number == random1) {
             winner = true;
+            _candyToken.mintTo(msg.sender, 20);
         }
 
         emit Play(msg.sender, random1, winner);

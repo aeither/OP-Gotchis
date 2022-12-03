@@ -69,16 +69,16 @@ contract Treasury is Ownable {
     function supply() public onlyOwner {
         token.approve(address(POOL), type(uint256).max);
 
+        POOL.supply(address(token), totalAmount, address(this), 0);
+
         depositedAmount += totalAmount;
         totalAmount = 0;
-
-        POOL.supply(address(token), totalAmount, address(this), 0);
     }
 
     function withdraw() public onlyOwner {
+        POOL.withdraw(address(token), depositedAmount, address(this));
+
         totalAmount += depositedAmount;
         depositedAmount = 0;
-
-        POOL.withdraw(address(token), depositedAmount, address(this));
     }
 }

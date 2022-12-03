@@ -5,6 +5,8 @@ import path from "path";
 import dotenv from "dotenv";
 dotenv.config();
 
+import { TREASURY_ADDRESS } from "../frontend/src/utils/constants";
+
 if (!process.env.PRIVATE_KEY) throw "PRIVATE_KEY not found";
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
@@ -21,7 +23,7 @@ const main = async () => {
   // create contract
   const contractAddress = await sdk.deployer.deployEditionDrop({
     name: "OP Gotchis",
-    primary_sale_recipient: "0x9Ed18213603B9082d786D75d9fBDE34B15960025",
+    primary_sale_recipient: TREASURY_ADDRESS,
   });
   const contract = await sdk.getContract(contractAddress, "edition-drop");
   console.log(contractAddress);
