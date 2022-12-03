@@ -253,7 +253,7 @@ contract Gotchi is
         bool winner = false;
         if (number == random1) {
             winner = true;
-            _candyToken.mintTo(msg.sender, 20);
+            _candyToken.mintTo(msg.sender, 20 * 10**18);
         }
 
         emit Play(msg.sender, random1, winner);
