@@ -11,8 +11,6 @@ Fund public goods and play evolving NFT game.
 
 [WEBSITE](https://op-gotchis.vercel.app/)
 
-[Google Slides](https://docs.google.com/presentation/d/1Ca2fyj3LaQt47lMieRgiLIc5V6XjELvT1piQw-M2KwA/edit?usp=sharing)
-
 ## Requirements
 - Metamask with Optimism - Goerli Optimism https://chainlist.org/
 - USDC from Aave. Enable Test Mode in settings. https://app.aave.com/
